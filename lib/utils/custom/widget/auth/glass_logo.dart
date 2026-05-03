@@ -10,13 +10,29 @@ class GlassLogo extends StatelessWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        // Semi-transparent white (20% opacity) for frosted glass look
         color: const Color.fromRGBO(255, 255, 255, 0.2),
-        shape: BoxShape.circle,
-        // Subtle border (30% opacity) to define the circular shape
         border: Border.all(color: const Color.fromRGBO(255, 255, 255, 0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(138, 214, 209, 209),
+            blurRadius: 10,
+            spreadRadius: 1.3,
+          ),
+        ],
       ),
-      child: const Icon(Icons.blur_on, color: Colors.white, size: 40),
+      alignment: Alignment.center,
+      child: Image.asset(
+        'lib/asset/logo.png',
+        width: 80,
+        height: 80,
+        //color: Colors.white,
+        fit: BoxFit.contain,
+      ),
+      // const Icon(
+      //   Icons.blur_on,
+      //   color: Colors.white,
+      //   size: 40,
+      // ),
     );
   }
 }

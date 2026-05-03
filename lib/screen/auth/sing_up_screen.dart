@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_deposit/screen/auth/sing_up_screen.dart';
+import 'package:my_deposit/screen/auth/login_screen.dart';
 import 'package:my_deposit/utils/custom/widget/auth/custom_auth_bottom.dart';
 import 'package:my_deposit/utils/custom/widget/auth/glass_card.dart';
 import 'package:my_deposit/utils/custom/widget/auth/glass_logo.dart';
 import 'package:my_deposit/utils/custom/widget/auth/input_field.dart';
 import 'package:my_deposit/utils/custom/widget/auth/vibrant_background.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class SingUpScreen extends StatelessWidget {
+  SingUpScreen({super.key});
 
   final email = TextEditingController();
   final password = TextEditingController();
@@ -55,9 +55,8 @@ class LoginScreen extends StatelessWidget {
                             letterSpacing: 1.2,
                           ),
                         ),
-                        //const SizedBox(height: 30),
                         Text(
-                          "\nPlease login to your account\n",
+                          "\nCreate an account to get started",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             color: const Color.fromRGBO(255, 255, 255, 0.7),
@@ -66,6 +65,16 @@ class LoginScreen extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
+                        const SizedBox(height: 30),
+
+                        // Username input field with glass styling
+                        input_field(
+                          hint: "Full Name",
+                          controllerName: email,
+                          giveKey: emailKey,
+                        ),
+                        const SizedBox(height: 16),
+
                         input_field(
                           hint: "Email",
                           controllerName: email,
@@ -73,6 +82,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
 
+                        // Password input field with glass styling
                         input_field(
                           hint: "Password",
                           controllerName: password,
@@ -80,24 +90,25 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
 
+                        // Login button with glass effect
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             custom_auth_bottom(
                               bottomName: "LOGIN",
                               onTap: () {
+                                Get.to(
+                                  transition: Transition.rightToLeft,
+                                  duration: const Duration(seconds: 1),
+                                  () => LoginScreen(),
+                                );
+                                // Handle login logic here
                               },
                             ),
                             const SizedBox(width: 16),
                             custom_auth_bottom(
                               bottomName: "Sing UP",
-                              onTap: () {
-                                Get.to(
-                                  transition: Transition.leftToRight,
-                                  duration: const Duration(seconds: 1),
-                                  () => SingUpScreen(),
-                                );
-                              },
+                              onTap: () {},
                             ),
                           ],
                         ),
