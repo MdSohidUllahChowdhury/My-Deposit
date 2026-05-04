@@ -47,3 +47,5 @@ app.*.map.json
 web
 analysis_options.yaml
 test
+lib/supabase/database_password.txt
+lib/supabase/key.dart

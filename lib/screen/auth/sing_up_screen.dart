@@ -7,10 +7,12 @@ import 'package:my_deposit/utils/custom/widget/auth/glass_card.dart';
 import 'package:my_deposit/utils/custom/widget/auth/glass_logo.dart';
 import 'package:my_deposit/utils/custom/widget/auth/input_field.dart';
 import 'package:my_deposit/utils/custom/widget/auth/vibrant_background.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SingUpScreen extends StatelessWidget {
   SingUpScreen({super.key});
 
+  final name = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
   final emailKey = const Key("email");
@@ -70,7 +72,7 @@ class SingUpScreen extends StatelessWidget {
                         // Username input field with glass styling
                         input_field(
                           hint: "Full Name",
-                          controllerName: email,
+                          controllerName: name,
                           giveKey: emailKey,
                         ),
                         const SizedBox(height: 16),
@@ -102,13 +104,82 @@ class SingUpScreen extends StatelessWidget {
                                   duration: const Duration(seconds: 1),
                                   () => LoginScreen(),
                                 );
-                                // Handle login logic here
                               },
                             ),
                             const SizedBox(width: 16),
                             custom_auth_bottom(
-                              bottomName: "Sing UP",
-                              onTap: () {},
+                              bottomName: "Confirm",
+                              onTap: () async {
+                                if (email.text.isEmpty ||
+                                    password.text.isEmpty ||
+                                    name.text.isEmpty) {
+                                  Get.snackbar(
+                                    "Dicline to Sign Up",
+                                    "All the Fields are Required",
+                                    snackPosition: SnackPosition.TOP,
+                                    backgroundColor: const Color.fromARGB(
+                                      76,
+                                      244,
+                                      67,
+                                      54,
+                                    ),
+                                    colorText: Colors.white,
+                                  );
+                                  return;
+                                }
+                                try {
+                                  await Supabase.instance.client.auth.signUp(
+                                    email: email.text,
+                                    password: password.text,
+                                  );
+                                  Get.snackbar(
+                                    "Signup Success",
+                                    "Account created successfully!",
+                                    snackPosition: SnackPosition.TOP,
+                                    backgroundColor: const Color.fromARGB(
+                                      179,
+                                      6,
+                                      12,
+                                      0,
+                                    ),
+                                    colorText: Colors.white,
+                                  );
+                                  Future.delayed(const Duration(seconds: 1));
+                                  Get.to(
+                                    transition: Transition.rightToLeft,
+                                    duration: const Duration(seconds: 1),
+                                    () => LoginScreen(),
+                                  );
+                                } on AuthException catch (e) {
+                                  if (e.statusCode == '429') {
+                                    Get.snackbar(
+                                      "Signup Failed",
+                                      "Slow down! Wait a minute before trying again.",
+                                      snackPosition: SnackPosition.TOP,
+                                      backgroundColor: const Color.fromARGB(
+                                        76,
+                                        244,
+                                        67,
+                                        54,
+                                      ),
+                                      colorText: Colors.white,
+                                    );
+                                  } else {
+                                    Get.snackbar(
+                                      "Signup Failed",
+                                      e.toString(),
+                                      snackPosition: SnackPosition.TOP,
+                                      backgroundColor: const Color.fromARGB(
+                                        76,
+                                        244,
+                                        67,
+                                        54,
+                                      ),
+                                      colorText: Colors.white,
+                                    );
+                                  }
+                                }
+                              },
                             ),
                           ],
                         ),

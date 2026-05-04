@@ -16,7 +16,6 @@ class GlassCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color.fromRGBO(255, 255, 255, 0.1),
             borderRadius: BorderRadius.circular(30),
-
             border: Border.all(color: const Color.fromRGBO(255, 255, 255, 0.2)),
           ),
           child: child,

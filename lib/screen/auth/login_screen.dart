@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_deposit/screen/auth/sing_up_screen.dart';
+import 'package:my_deposit/screen/deposit/deposit_main.dart';
 import 'package:my_deposit/utils/custom/widget/auth/custom_auth_bottom.dart';
 import 'package:my_deposit/utils/custom/widget/auth/glass_card.dart';
 import 'package:my_deposit/utils/custom/widget/auth/glass_logo.dart';
 import 'package:my_deposit/utils/custom/widget/auth/input_field.dart';
 import 'package:my_deposit/utils/custom/widget/auth/vibrant_background.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -72,23 +74,78 @@ class LoginScreen extends StatelessWidget {
                           giveKey: emailKey,
                         ),
                         const SizedBox(height: 16),
-
                         input_field(
                           hint: "Password",
                           controllerName: password,
                           giveKey: passwordKey,
                         ),
                         const SizedBox(height: 30),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             custom_auth_bottom(
                               bottomName: "LOGIN",
-                              onTap: () {
+                              onTap: () async {
+                                if (email.text.isEmpty ||
+                                    password.text.isEmpty) {
+                                  Get.snackbar(
+                                    "Dicline to Sign Up",
+                                    "All the Fields are Required",
+                                    snackPosition: SnackPosition.TOP,
+                                    backgroundColor: const Color.fromARGB(
+                                      76,
+                                      244,
+                                      67,
+                                      54,
+                                    ),
+                                    colorText: Colors.white,
+                                  );
+                                }
+                                await Future.delayed(
+                                  const Duration(seconds: 2),
+                                );
+                                try {
+                                  await Supabase.instance.client.auth
+                                      .signInWithPassword(
+                                        email: email.text,
+                                        password: password.text,
+                                      );
+                                  await Future.delayed(
+                                    const Duration(seconds: 1),
+                                  );
+                                  Get.offAll(() => const DepositMain());
+                                  Get.snackbar(
+                                    "Login Success",
+                                    "Welcome back!",
+                                    snackPosition: SnackPosition.TOP,
+                                    backgroundColor: const Color.fromARGB(
+                                      76,
+                                      76,
+                                      175,
+                                      79,
+                                    ),
+                                    colorText: Colors.white,
+                                  );
+                                } catch (e) {
+                                  Get.snackbar(
+                                    "Login Failed",
+                                    e.toString(),
+                                    snackPosition: SnackPosition.TOP,
+                                    backgroundColor: const Color.fromARGB(
+                                      76,
+                                      244,
+                                      67,
+                                      54,
+                                    ),
+                                    colorText: Colors.white,
+                                  );
+                                }
+
+                                return;
                               },
                             ),
                             const SizedBox(width: 16),
+
                             custom_auth_bottom(
                               bottomName: "Sing UP",
                               onTap: () {
