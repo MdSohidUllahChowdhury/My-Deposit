@@ -5,7 +5,6 @@ import 'package:my_deposit/screen/auth/sing_up_screen.dart';
 import 'package:my_deposit/screen/deposit/deposit_main.dart';
 import 'package:my_deposit/utils/custom/widget/auth/custom_auth_bottom.dart';
 import 'package:my_deposit/utils/custom/widget/auth/glass_card.dart';
-import 'package:my_deposit/utils/custom/widget/auth/glass_logo.dart';
 import 'package:my_deposit/utils/custom/widget/auth/input_field.dart';
 import 'package:my_deposit/utils/custom/widget/auth/vibrant_background.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -32,7 +31,11 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const GlassLogo(),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage('lib/asset/logo.png'),
+                  ),
+                  //const GlassLogo(),
                   const SizedBox(height: 30),
                   GlassCard(
                     child: Column(

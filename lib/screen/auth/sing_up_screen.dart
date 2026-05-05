@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my_deposit/screen/auth/login_screen.dart';
 import 'package:my_deposit/utils/custom/widget/auth/custom_auth_bottom.dart';
 import 'package:my_deposit/utils/custom/widget/auth/glass_card.dart';
-import 'package:my_deposit/utils/custom/widget/auth/glass_logo.dart';
 import 'package:my_deposit/utils/custom/widget/auth/input_field.dart';
 import 'package:my_deposit/utils/custom/widget/auth/vibrant_background.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -32,7 +31,11 @@ class SingUpScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const GlassLogo(),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage('lib/asset/logo.png'),
+                  ),
+                  //const GlassLogo(),
                   const SizedBox(height: 30),
                   GlassCard(
                     child: Column(
@@ -131,7 +134,19 @@ class SingUpScreen extends StatelessWidget {
                                   await Supabase.instance.client.auth.signUp(
                                     email: email.text,
                                     password: password.text,
+                                    //data: {"Display name": name},
                                   );
+                                  await Supabase.instance.client
+                                      .from('profiles')
+                                      .insert({
+                                        'id': Supabase
+                                            .instance
+                                            .client
+                                            .auth
+                                            .currentUser!
+                                            .id,
+                                        'name': name.text.trim(),
+                                      });
                                   Get.snackbar(
                                     "Signup Success",
                                     "Account created successfully!",
