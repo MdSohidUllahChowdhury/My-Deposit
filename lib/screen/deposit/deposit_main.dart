@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:my_deposit/screen/deposit/add_deposit.dart';
 import 'package:my_deposit/utils/custom/widget/auth/glass_card.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DepositMain extends StatelessWidget {
   const DepositMain({super.key});
@@ -173,27 +174,61 @@ class DepositMain extends StatelessWidget {
 
           // Activity List
           Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: const CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Color.fromARGB(82, 255, 255, 255),
-                    child: Icon(
-                      Iconsax.avalanche_avax,
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                  ),
-                  title: Text(
-                    "Masumur Rahaman",
-                    style: TextStyle(
-                      fontFamily: GoogleFonts.numans().fontFamily,
-                    ),
-                  ),
-                  subtitle: Text("5000 BDT "),
-                  trailing: Text("05-05-2026"),
+            child: StreamBuilder<List<Map<String, dynamic>>>(
+              stream: Supabase.instance.client
+                  .from('solo_deposit_amount')
+                  .stream(primaryKey: ['id'])
+                  .eq('uid', Supabase.instance.client.auth.currentUser!.id)
+                  .order('created_at'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text("No deposit history found."));
+                }
+                final deposits = snapshot.data!;
+                return ListView.builder(
+                  itemCount: deposits.length,
+                  itemBuilder: (context, index) {
+                    final item = deposits[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: const Color.fromARGB(
+                          52,
+                          234,
+                          230,
+                          230,
+                        ),
+                        radius: 35,
+                        child: Icon(
+                          Iconsax.money_add_copy,
+                          color: Colors.white,
+                          size: 35,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${Supabase.instance.client.auth.currentUser?.email}",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      title: Text(
+                        "৳${item['amount']}",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      trailing: Text(
+                        "Date: ${item['created_at'].toString().split('T')[0]}",
+                      ),
+                    );
+                  },
                 );
               },
             ),

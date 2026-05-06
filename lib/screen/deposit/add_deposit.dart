@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AddDeposit extends StatefulWidget {
   const AddDeposit({super.key});
@@ -13,6 +14,27 @@ class AddDeposit extends StatefulWidget {
 
 final amount = TextEditingController();
 final amountKey = const Key("amount");
+
+// Future<List<dynamic>> fetchEmployees() async {
+//   final response = await Supabase.instance.client
+//       .from('solo_deposit_amount')
+//       .select();
+//   return response;
+// }
+
+Future<List<Map<String, dynamic>>> fetchMyDeposits() async {
+  final user = Supabase.instance.client.auth.currentUser;
+
+  if (user == null) return [];
+
+  final response = await Supabase.instance.client
+      .from('solo_deposit_amount')
+      .select()
+      .eq('uid', user.id)
+      .order('created_at', ascending: false);
+
+  return List<Map<String, dynamic>>.from(response);
+}
 
 class _AddDepositState extends State<AddDeposit> {
   @override
@@ -72,6 +94,7 @@ class _AddDepositState extends State<AddDeposit> {
                     color: const Color.fromRGBO(255, 255, 255, 0.2),
                   ),
                 ),
+
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,14 +123,43 @@ class _AddDepositState extends State<AddDeposit> {
                       textAlign: TextAlign.center,
                       cursorColor: Colors.white,
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(),
                     ),
                     SizedBox(height: 30),
 
                     InkWell(
-                      onTap: (){
+                      onTap: () async {
+                        // ignore: unrelated_type_equality_checks
+                        if (amount == 0 || amount.text.isEmpty) return;
 
+                        try {
+                          await Supabase.instance.client
+                              .from('solo_deposit_amount')
+                              .insert({
+                                'amount': amount.text,
+                                'uid': Supabase
+                                    .instance
+                                    .client
+                                    .auth
+                                    .currentUser
+                                    ?.id, // link to the logged-in user
+                              });
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Data sent successfully!'),
+                            ),
+                          );
+                        } catch (e) {
+                          //print(e);
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('Error: $e')));
+                        }
+                        setState(() {
+                          amount.clear();
+                        });
                       },
+
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.9,
                         height: 50,
@@ -146,6 +198,72 @@ class _AddDepositState extends State<AddDeposit> {
               ),
             ),
           ),
+
+          SizedBox(height: 20),
+
+          // your deposit list
+          Expanded(
+            child: StreamBuilder<List<Map<String, dynamic>>>(
+              stream: Supabase.instance.client
+                  .from('solo_deposit_amount')
+                  .stream(primaryKey: ['id'])
+                  .eq('uid', Supabase.instance.client.auth.currentUser!.id)
+                  .order('created_at'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text("No deposit history found."));
+                }
+                final deposits = snapshot.data!;
+                return ListView.builder(
+                  itemCount: deposits.length,
+                  itemBuilder: (context, index) {
+                    final item = deposits[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: const Color.fromARGB(
+                          52,
+                          234,
+                          230,
+                          230,
+                        ),
+                        radius: 35,
+                        child: Icon(
+                          Iconsax.money_add_copy,
+                          color: Colors.white,
+                          size: 35,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${Supabase.instance.client.auth.currentUser?.email}",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      title: Text(
+                        "৳${item['amount']}",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      trailing: Text(
+                        "Date: ${item['created_at'].toString().split('T')[0]}",
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+
+
         ],
       ),
     );
