@@ -1,6 +1,6 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -15,26 +15,6 @@ class AddDeposit extends StatefulWidget {
 final amount = TextEditingController();
 final amountKey = const Key("amount");
 
-// Future<List<dynamic>> fetchEmployees() async {
-//   final response = await Supabase.instance.client
-//       .from('solo_deposit_amount')
-//       .select();
-//   return response;
-// }
-
-Future<List<Map<String, dynamic>>> fetchMyDeposits() async {
-  final user = Supabase.instance.client.auth.currentUser;
-
-  if (user == null) return [];
-
-  final response = await Supabase.instance.client
-      .from('solo_deposit_amount')
-      .select()
-      .eq('uid', user.id)
-      .order('created_at', ascending: false);
-
-  return List<Map<String, dynamic>>.from(response);
-}
 
 class _AddDepositState extends State<AddDeposit> {
   @override
@@ -44,7 +24,7 @@ class _AddDepositState extends State<AddDeposit> {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
           icon: Icon(Iconsax.back_square, color: Colors.white, size: 35),
         ),
@@ -262,8 +242,6 @@ class _AddDepositState extends State<AddDeposit> {
               },
             ),
           ),
-
-
         ],
       ),
     );
