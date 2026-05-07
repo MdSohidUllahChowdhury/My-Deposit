@@ -384,7 +384,6 @@ class _AddDepositState extends State<AddDeposit> {
                       ),
                       subtitle: Text(
                         "${item['user_name']}",
-                        //Supabase.instance.client.auth.currentUser?.email}",
                         style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey.shade500,

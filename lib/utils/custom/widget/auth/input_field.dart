@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 // ignore: camel_case_types
 class input_field extends StatelessWidget {
-  const input_field({
+  input_field({
     super.key,
     required this.hint,
     required this.controllerName,
-    required this.giveKey,
+    this.giveKey,
   });
 
   final String hint;
   final TextEditingController controllerName;
-  final Key giveKey;
+  Key? giveKey;
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +29,10 @@ class input_field extends StatelessWidget {
         decoration: InputDecoration(
           prefixIcon: Icon(
             hint == "Email"
-                ? Icons.email
-                : hint == "Full Name"
-                ? Icons.person
-                : Icons.lock,
+                ? Icons.email_outlined
+                : hint == "Number"
+                ? Iconsax.call_copy
+                : Icons.lock_outline_rounded,
             color: const Color.fromRGBO(255, 255, 255, 0.54),
           ),
           hintText: hint,

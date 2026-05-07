@@ -1,9 +1,7 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:url_launcher/url_launcher.dart'; // লিঙ্ক ওপেন করার জন্য
+import 'package:url_launcher/url_launcher.dart';
 
 void showDeveloperInfo() {
   Get.snackbar(

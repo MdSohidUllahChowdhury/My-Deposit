@@ -26,7 +26,6 @@ class _DepositMainState extends State<DepositMain> {
         stream: Supabase.instance.client
             .from('solo_deposit_amount')
             .stream(primaryKey: ['id'])
-            //.eq('uid', Supabase.instance.client.auth.currentUser!.id)
             .order('created_at'),
         builder: (context, snapshot) {
           double totalDeposit = 0;

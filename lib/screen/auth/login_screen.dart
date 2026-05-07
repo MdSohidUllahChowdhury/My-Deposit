@@ -9,13 +9,75 @@ import 'package:my_deposit/utils/custom/widget/auth/input_field.dart';
 import 'package:my_deposit/utils/custom/widget/auth/vibrant_background.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
-  final emailKey = const Key("email");
-  final passwordKey = const Key("password");
+
+  bool isLoading = false;
+
+  @override
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    if (email.text.isEmpty || password.text.isEmpty) {
+      Get.snackbar(
+        "Login Declined",
+        "Email and Password are required!",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red.withOpacity(0.4),
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      await Supabase.instance.client.auth.signInWithPassword(
+        email: email.text.trim(),
+        password: password.text.trim(),
+      );
+
+      Get.snackbar(
+        "Login Success",
+        "Welcome back!",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green.withOpacity(0.5),
+        colorText: Colors.white,
+      );
+
+      Get.offAll(() => const DepositMain());
+    } on AuthException catch (e) {
+      Get.snackbar(
+        "Login Failed",
+        e.message,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red.withOpacity(0.4),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Something went wrong, please try again.",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red.withOpacity(0.4),
+        colorText: Colors.white,
+      );
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +86,23 @@ class LoginScreen extends StatelessWidget {
       body: Stack(
         children: [
           const VibrantBackground(),
-
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 50,
                     backgroundImage: AssetImage('lib/asset/logo.png'),
                   ),
-                  //const GlassLogo(),
                   const SizedBox(height: 30),
                   GlassCard(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "My  Deposit",
+                          "My Deposit",
                           style: GoogleFonts.poppins(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
@@ -52,112 +112,48 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          "Track your finances with style and clarity ",
+                          "Track your finances with style and clarity",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
-                            color: const Color.fromRGBO(255, 255, 255, 0.7),
+                            color: Colors.white.withOpacity(0.7),
                             fontSize: 13,
-                            letterSpacing: 1.2,
                           ),
                         ),
-                        //const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         Text(
-                          "\nPlease login to your account\n",
-                          textAlign: TextAlign.center,
+                          "Please login to your account",
                           style: GoogleFonts.poppins(
-                            color: const Color.fromRGBO(255, 255, 255, 0.7),
+                            color: Colors.white.withOpacity(0.8),
                             fontSize: 16,
-                            letterSpacing: 1.2,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        input_field(
-                          hint: "Email",
-                          controllerName: email,
-                          giveKey: emailKey,
-                        ),
+                        const SizedBox(height: 20),
+                        input_field(hint: "Email", controllerName: email),
                         const SizedBox(height: 16),
-                        input_field(
-                          hint: "Password",
-                          controllerName: password,
-                          giveKey: passwordKey,
-                        ),
+                        input_field(hint: "Password", controllerName: password),
                         const SizedBox(height: 30),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            custom_auth_bottom(
-                              bottomName: "LOGIN",
-                              onTap: () async {
-                                if (email.text.isEmpty ||
-                                    password.text.isEmpty) {
-                                  Get.snackbar(
-                                    "Dicline to Sign Up",
-                                    "All the Fields are Required",
-                                    snackPosition: SnackPosition.TOP,
-                                    backgroundColor: const Color.fromARGB(
-                                      76,
-                                      244,
-                                      67,
-                                      54,
+                            isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
                                     ),
-                                    colorText: Colors.white,
-                                  );
-                                }
-                                await Future.delayed(
-                                  const Duration(seconds: 2),
-                                );
-                                try {
-                                  await Supabase.instance.client.auth
-                                      .signInWithPassword(
-                                        email: email.text,
-                                        password: password.text,
-                                      );
-                                  await Future.delayed(
-                                    const Duration(seconds: 1),
-                                  );
-                                  Get.offAll(() => const DepositMain());
-                                  Get.snackbar(
-                                    "Login Success",
-                                    "Welcome back!",
-                                    snackPosition: SnackPosition.TOP,
-                                    backgroundColor: const Color.fromARGB(
-                                      76,
-                                      76,
-                                      175,
-                                      79,
-                                    ),
-                                    colorText: Colors.white,
-                                  );
-                                } catch (e) {
-                                  Get.snackbar(
-                                    "Login Failed",
-                                    e.toString(),
-                                    snackPosition: SnackPosition.TOP,
-                                    backgroundColor: const Color.fromARGB(
-                                      76,
-                                      244,
-                                      67,
-                                      54,
-                                    ),
-                                    colorText: Colors.white,
-                                  );
-                                }
-
-                                return;
-                              },
-                            ),
+                                  )
+                                : custom_auth_bottom(
+                                    bottomName: "LOGIN",
+                                    onTap: _handleLogin,
+                                  ),
                             const SizedBox(width: 16),
-
                             custom_auth_bottom(
-                              bottomName: "Sing UP",
-                              onTap: () {
-                                Get.to(
-                                  transition: Transition.leftToRight,
-                                  duration: const Duration(seconds: 1),
-                                  () => SingUpScreen(),
-                                );
-                              },
+                              bottomName: "SIGN UP",
+                              onTap: () => Get.to(
+                                () => const SingUpScreen(),
+                                transition: Transition.leftToRight,
+                                duration: const Duration(seconds: 1),
+                              ),
                             ),
                           ],
                         ),

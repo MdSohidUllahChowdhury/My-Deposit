@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Glass Logo Component
 class GlassLogo extends StatelessWidget {
   const GlassLogo({super.key});
 
@@ -25,14 +24,8 @@ class GlassLogo extends StatelessWidget {
         'lib/asset/logo.png',
         width: 80,
         height: 80,
-        //color: Colors.white,
         fit: BoxFit.contain,
       ),
-      // const Icon(
-      //   Icons.blur_on,
-      //   color: Colors.white,
-      //   size: 40,
-      // ),
     );
   }
 }

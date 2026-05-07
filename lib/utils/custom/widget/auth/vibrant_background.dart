@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_deposit/utils/custom/widget/auth/animated_orb.dart';
 
-/// Vibrant Animated Background
-
 class VibrantBackground extends StatelessWidget {
   const VibrantBackground({super.key});
 
