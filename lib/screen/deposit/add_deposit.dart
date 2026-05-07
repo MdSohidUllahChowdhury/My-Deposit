@@ -14,7 +14,8 @@ class AddDeposit extends StatefulWidget {
 
 final amount = TextEditingController();
 final amountKey = const Key("amount");
-
+final nameController = TextEditingController();
+final nameKey = const Key("name");
 
 class _AddDepositState extends State<AddDeposit> {
   @override
@@ -44,6 +45,7 @@ class _AddDepositState extends State<AddDeposit> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // Add Amount Text
           Align(
             alignment: Alignment.topLeft,
             child: Text(
@@ -58,6 +60,7 @@ class _AddDepositState extends State<AddDeposit> {
           ),
           const SizedBox(height: 10),
 
+          // Add Amount Card
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: BackdropFilter(
@@ -79,6 +82,7 @@ class _AddDepositState extends State<AddDeposit> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Add Amount Text
                     Text(
                       "Enter your Total Amount 🪴".toUpperCase(),
                       style: TextStyle(
@@ -105,39 +109,188 @@ class _AddDepositState extends State<AddDeposit> {
                       keyboardType: TextInputType.number,
                     ),
                     SizedBox(height: 30),
-
                     InkWell(
                       onTap: () async {
-                        // ignore: unrelated_type_equality_checks
-                        if (amount == 0 || amount.text.isEmpty) return;
+                        double? enteredAmount = double.tryParse(amount.text);
 
-                        try {
-                          await Supabase.instance.client
-                              .from('solo_deposit_amount')
-                              .insert({
-                                'amount': amount.text,
-                                'uid': Supabase
-                                    .instance
-                                    .client
-                                    .auth
-                                    .currentUser
-                                    ?.id, // link to the logged-in user
-                              });
-
+                        if (amount.text.isEmpty ||
+                            enteredAmount == null ||
+                            enteredAmount <= 0) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Data sent successfully!'),
+                            SnackBar(
+                              content: Center(
+                                child: Text(
+                                  'Please enter a valid amount',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: GoogleFonts.numans().fontFamily,
+                                  ),
+                                ),
+                              ),
+                              backgroundColor: Colors.redAccent,
                             ),
                           );
+                          return;
+                        }
+                        try {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return AlertDialog(
+                                elevation: 30,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                backgroundColor: const Color.fromARGB(
+                                  255,
+                                  47,
+                                  1,
+                                  1,
+                                ),
+                                title: Text(
+                                  "Enter Full Name".toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: GoogleFonts.numans().fontFamily,
+                                  ),
+                                ),
+                                content: TextField(
+                                  key: nameKey,
+                                  controller: nameController,
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        "Enter your name to confirm payment",
+                                    hintStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily:
+                                          GoogleFonts.numans().fontFamily,
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color.fromARGB(
+                                        198,
+                                        149,
+                                        211,
+                                        3,
+                                      ),
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      elevation: 5,
+                                    ),
+
+                                    onPressed: () async {
+                                      if (nameController.text.trim().isEmpty) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Center(
+                                              child: Text(
+                                                'Name is required to confirm!',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w800,
+                                                  fontFamily:
+                                                      GoogleFonts.numans()
+                                                          .fontFamily,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                        return;
+                                      }
+
+                                      try {
+                                        await Supabase.instance.client
+                                            .from('solo_deposit_amount')
+                                            .insert({
+                                              'amount': amount.text,
+                                              'user_name': nameController.text
+                                                  .trim(),
+                                              'uid': Supabase
+                                                  .instance
+                                                  .client
+                                                  .auth
+                                                  .currentUser
+                                                  ?.id, // link to the logged-in user
+                                            });
+
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Center(
+                                              child: Text(
+                                                'Payment confirmed successfully!',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w800,
+                                                  fontFamily:
+                                                      GoogleFonts.numans()
+                                                          .fontFamily,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(content: Text('Error: $e')),
+                                        );
+                                      }
+                                      setState(() {
+                                        amount.clear();
+                                        nameController.clear();
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                    child: Text(
+                                      "Confirm Payment",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         } catch (e) {
-                          //print(e);
                           ScaffoldMessenger.of(
                             context,
                           ).showSnackBar(SnackBar(content: Text('Error: $e')));
                         }
-                        setState(() {
-                          amount.clear();
-                        });
                       },
 
                       child: Container(
@@ -178,10 +331,22 @@ class _AddDepositState extends State<AddDeposit> {
               ),
             ),
           ),
-
           SizedBox(height: 20),
 
-          // your deposit list
+          // Your deposit list text
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "\n   Your latest deposits ⤵ ",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
           Expanded(
             child: StreamBuilder<List<Map<String, dynamic>>>(
               stream: Supabase.instance.client
@@ -210,19 +375,20 @@ class _AddDepositState extends State<AddDeposit> {
                           230,
                           230,
                         ),
-                        radius: 35,
+                        radius: 30,
                         child: Icon(
-                          Iconsax.money_add_copy,
+                          Iconsax.dollar_circle_copy,
                           color: Colors.white,
                           size: 35,
                         ),
                       ),
                       subtitle: Text(
-                        "${Supabase.instance.client.auth.currentUser?.email}",
+                        "${item['user_name']}",
+                        //Supabase.instance.client.auth.currentUser?.email}",
                         style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       title: Text(
@@ -231,10 +397,17 @@ class _AddDepositState extends State<AddDeposit> {
                           fontSize: 18,
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
+                          letterSpacing: 1.4,
+                          fontFamily: GoogleFonts.numans().fontFamily,
                         ),
                       ),
                       trailing: Text(
                         "Date: ${item['created_at'].toString().split('T')[0]}",
+                        style: TextStyle(
+                          color: const Color.fromARGB(167, 255, 255, 255),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     );
                   },

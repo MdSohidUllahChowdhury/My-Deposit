@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:my_deposit/screen/deposit/add_deposit.dart';
 import 'package:my_deposit/utils/custom/widget/auth/glass_card.dart';
+import 'package:my_deposit/utils/custom/widget/deposit/dev_info.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../utils/custom/widget/deposit/logout.dart';
 
@@ -25,7 +26,7 @@ class _DepositMainState extends State<DepositMain> {
         stream: Supabase.instance.client
             .from('solo_deposit_amount')
             .stream(primaryKey: ['id'])
-            .eq('uid', Supabase.instance.client.auth.currentUser!.id)
+            //.eq('uid', Supabase.instance.client.auth.currentUser!.id)
             .order('created_at'),
         builder: (context, snapshot) {
           double totalDeposit = 0;
@@ -48,36 +49,28 @@ class _DepositMainState extends State<DepositMain> {
               // User Info
               ListTile(
                 leading: const CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Color.fromARGB(82, 255, 255, 255),
-                  child: Icon(
-                    Iconsax.direct_notification_copy,
-                    size: 30,
-                    color: Colors.white,
-                  ),
+                  radius: 30,
+                  backgroundImage: AssetImage('lib/asset/ShaMaNa.jpeg'),
                 ),
-                title: const Text(
-                  "Shakil Chowdhury",
+                title: Text(
+                  "${Supabase.instance.client.auth.currentUser?.email}",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: GoogleFonts.padauk().fontFamily,
+                  ),
+                ),
+                subtitle: const Text(
+                  "Every Payment Matter 🪩",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                subtitle: Text(
-                  "${Supabase.instance.client.auth.currentUser?.email}",
-                  style: const TextStyle(
-                    color: Color.fromARGB(192, 255, 255, 255),
-                    fontSize: 14,
-                  ),
-                ),
-                trailing: const CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage('lib/asset/logo.png'),
-                ),
               ),
-              const SizedBox(height: 30),
-
+              const SizedBox(height: 20),
               // Total Amount Card
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
@@ -132,7 +125,7 @@ class _DepositMainState extends State<DepositMain> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
 
               // Options Text
               const Align(
@@ -151,13 +144,22 @@ class _DepositMainState extends State<DepositMain> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const GlassCard(
-                    child: Column(
-                      children: [
-                        Icon(Iconsax.bank_copy, size: 35, color: Colors.white),
-                        SizedBox(height: 5),
-                        Text('Deposit'),
-                      ],
+                  InkWell(
+                    onTap: () {
+                      showDeveloperInfo();
+                    },
+                    child: const GlassCard(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Iconsax.teacher_copy,
+                            size: 35,
+                            color: Colors.white,
+                          ),
+                          SizedBox(height: 5),
+                          Text('Dev Info'),
+                        ],
+                      ),
                     ),
                   ),
                   InkWell(
@@ -248,7 +250,7 @@ class _DepositMainState extends State<DepositMain> {
                               ),
                             ),
                             subtitle: Text(
-                              "${Supabase.instance.client.auth.currentUser?.email}",
+                              "${item['user_name']}",
                               style: const TextStyle(
                                 fontSize: 13,
                                 color: Colors.white,
