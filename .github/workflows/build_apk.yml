@@ -1,0 +1,43 @@
+name: Flutter Build APK
+
+# GitHub to run the script everytime when push to the 'main' branch
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # This is the "cloud computer" GitHub provides
+
+    steps:
+      # 1. Pull code from GitHub onto the cloud computer
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Setup Java (Required for Android builds)
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # 3. Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # 4. Get dependencies (like running flutter pub get)
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 5. Build the APK (Standard Release version)
+      - name: Build APK
+        run: flutter build apk --release
+
+      # 6. Upload the APK for download 
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
