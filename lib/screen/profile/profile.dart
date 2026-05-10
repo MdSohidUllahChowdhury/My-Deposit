@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:my_deposit/utils/custom/widget/deposit/logout.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -35,7 +36,6 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
-
         // Only fetch records where 'uid' matches the logged-in user
         stream: Supabase.instance.client
             .from('solo_deposit_amount')
@@ -43,7 +43,6 @@ class ProfileScreen extends StatelessWidget {
             .eq('uid', user?.id ?? '')
             .order('created_at', ascending: false),
         builder: (context, snapshot) {
-
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(color: Colors.cyanAccent),
@@ -78,12 +77,7 @@ class ProfileScreen extends StatelessWidget {
                 // Avatar and Name Section
                 const CircleAvatar(
                   radius: 60,
-                  backgroundColor: Colors.cyanAccent,
-                  child: Icon(
-                    Iconsax.profile_tick_copy,
-                    size: 120,
-                    color: Color.fromARGB(237, 0, 0, 0),
-                  ),
+                  backgroundImage: AssetImage('lib/asset/ShaMaNa.jpeg'),
                 ),
                 const SizedBox(height: 15),
                 Text(
@@ -162,6 +156,35 @@ class ProfileScreen extends StatelessWidget {
                       ? _formatDate(data.first['created_at'])
                       : "No activity",
                 ),
+
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent.withOpacity(
+                      0.2,
+                    ), // Subtle red background
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: ListTile(
+                    onTap: () {
+                      Logout().logout();
+                    },
+
+                    leading: Icon(Iconsax.logout_copy, color: Colors.redAccent),
+                    title: Text(
+                      "Log Out",
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                ),
               ],
             ),
           );
@@ -180,7 +203,7 @@ class ProfileScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withOpacity(0.15),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(

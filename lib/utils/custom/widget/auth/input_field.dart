@@ -8,11 +8,15 @@ class input_field extends StatelessWidget {
     required this.hint,
     required this.controllerName,
     this.giveKey,
+    this.passwordVisible = false,
+    this.inputKeyboardType,
   });
 
   final String hint;
   final TextEditingController controllerName;
+  bool passwordVisible = false;
   Key? giveKey;
+  TextInputType? inputKeyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +27,11 @@ class input_field extends StatelessWidget {
         border: Border.all(color: const Color.fromRGBO(255, 255, 255, 0.1)),
       ),
       child: TextField(
-        style: const TextStyle(color: Colors.white),
-        controller: controllerName,
         key: giveKey,
+        controller: controllerName,
+        obscureText: passwordVisible,
+        keyboardType: inputKeyboardType,
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           prefixIcon: Icon(
             hint == "Email"

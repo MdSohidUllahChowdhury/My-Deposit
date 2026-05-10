@@ -32,7 +32,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
   Future<void> _handleSignUp() async {
     if (email.text.isEmpty || password.text.isEmpty || phone.text.isEmpty) {
       Get.snackbar(
-        "Error",
+        "SingUp Failed",
         "All fields are required",
         backgroundColor: Colors.red.withOpacity(0.4),
         colorText: Colors.white,
@@ -132,11 +132,23 @@ class _SingUpScreenState extends State<SingUpScreen> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        input_field(hint: "Number", controllerName: phone),
+                        input_field(
+                          hint: "Number",
+                          controllerName: phone,
+                          inputKeyboardType: TextInputType.phone,
+                        ),
                         const SizedBox(height: 16),
-                        input_field(hint: "Email", controllerName: email),
+                        input_field(
+                          hint: "Email",
+                          controllerName: email,
+                          inputKeyboardType: TextInputType.emailAddress,
+                        ),
                         const SizedBox(height: 16),
-                        input_field(hint: "Password", controllerName: password),
+                        input_field(
+                          hint: "Password",
+                          controllerName: password,
+                          passwordVisible: true,
+                        ),
                         const SizedBox(height: 30),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

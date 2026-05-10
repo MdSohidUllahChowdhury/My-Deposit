@@ -66,7 +66,7 @@ class _DepositMainState extends State<DepositMain> {
                       .toUpperCase(),
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 15,
+                    fontSize: 11,
                     fontWeight: FontWeight.bold,
                     fontFamily: GoogleFonts.saira().fontFamily,
                   ),
@@ -76,13 +76,13 @@ class _DepositMainState extends State<DepositMain> {
                   style: TextStyle(
                     fontFamily: GoogleFonts.notoColorEmoji().fontFamily,
                     color: Colors.grey,
-                    fontSize: 12,
+                    fontSize: 10,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 trailing: IconButton(
                   icon: const Icon(
-                    Icons.exit_to_app_outlined,
+                    Iconsax.icon_icx,
                     size: 25,
                     color: Colors.white,
                   ),
@@ -163,7 +163,7 @@ class _DepositMainState extends State<DepositMain> {
 
               // Options
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   QuickActionButton(
                     icon: Iconsax.teacher_copy,
@@ -171,7 +171,7 @@ class _DepositMainState extends State<DepositMain> {
                     onTap: showDeveloperInfo,
                   ),
                   QuickActionButton(
-                    icon: Iconsax.arrow_down_2_copy,
+                    icon: Iconsax.wallet_add_1_copy,
                     label: 'Deposit',
                     onTap: () async {
                       await Get.to(
@@ -222,8 +222,8 @@ class _DepositMainState extends State<DepositMain> {
                           return ListTile(
                             leading: CircleAvatar(
                               backgroundColor: item['amount'] > 0
-                                  ? const Color.fromARGB(52, 8, 163, 23)
-                                  : const Color.fromARGB(52, 235, 4, 4),
+                                  ? Colors.greenAccent.withValues(alpha: 0.55)
+                                  : Colors.red.withValues(alpha: 0.7),
                               radius: 25,
                               child: const Icon(
                                 Iconsax.dollar_circle_copy,
@@ -232,9 +232,11 @@ class _DepositMainState extends State<DepositMain> {
                               ),
                             ),
                             subtitle: Text(
-                              "${item['user_name']}",
-                              style: const TextStyle(
-                                fontSize: 13,
+                              "${item['user_name']}".toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: GoogleFonts.poppins().fontFamily,
                                 color: Colors.white,
                               ),
                             ),

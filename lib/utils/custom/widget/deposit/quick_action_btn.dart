@@ -20,7 +20,7 @@ class QuickActionButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(15),
       child: GlassCard(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

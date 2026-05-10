@@ -69,7 +69,7 @@ void showDeveloperInfo() {
       ],
     ),
     snackPosition: SnackPosition.BOTTOM,
-    backgroundColor: Colors.black.withOpacity(.87),
+    backgroundColor: Colors.black.withOpacity(0.95),
     borderRadius: 20,
     margin: const EdgeInsets.all(15),
     padding: const EdgeInsets.all(20),

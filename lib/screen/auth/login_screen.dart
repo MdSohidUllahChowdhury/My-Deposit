@@ -129,9 +129,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        input_field(hint: "Email", controllerName: email),
+                        input_field(
+                          hint: "Email",
+                          controllerName: email,
+                          inputKeyboardType: TextInputType.emailAddress,
+                        ),
                         const SizedBox(height: 16),
-                        input_field(hint: "Password", controllerName: password),
+                        input_field(
+                          hint: "Password",
+                          controllerName: password,
+                          passwordVisible: true,
+                        ),
                         const SizedBox(height: 30),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

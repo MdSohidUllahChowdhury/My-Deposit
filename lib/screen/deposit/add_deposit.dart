@@ -161,8 +161,8 @@ class _AddDepositState extends State<AddDeposit> {
                                         "Enter your name to confirm payment",
                                     hintStyle: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w300,
                                       fontFamily:
                                           GoogleFonts.numans().fontFamily,
                                     ),
@@ -364,8 +364,8 @@ class _AddDepositState extends State<AddDeposit> {
                     return ListTile(
                       leading: CircleAvatar(
                         backgroundColor: item['amount'] > 0
-                            ? const Color.fromARGB(52, 8, 163, 23)
-                            : const Color.fromARGB(52, 235, 4, 4),
+                            ? Colors.greenAccent.withValues(alpha: 0.55)
+                            : Colors.red.withValues(alpha: 0.7),
                         radius: 25,
                         child: const Icon(
                           Iconsax.dollar_circle_copy,
@@ -374,11 +374,12 @@ class _AddDepositState extends State<AddDeposit> {
                         ),
                       ),
                       subtitle: Text(
-                        "${item['user_name']}",
+                        "${item['user_name']}".toUpperCase(),
                         style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey.shade500,
+                          fontSize: 12,
                           fontWeight: FontWeight.w500,
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                          color: Colors.white,
                         ),
                       ),
                       title: Text(
