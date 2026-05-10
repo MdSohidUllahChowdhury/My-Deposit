@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
         colorText: Colors.white,
       );
 
-      Get.offAll(() => const DepositMain());
+      Get.offAll(() => const DepositMain(), transition: Transition.leftToRight);
     } on AuthException catch (e) {
       Get.snackbar(
         "Login Failed",
@@ -152,7 +152,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               onTap: () => Get.to(
                                 () => const SingUpScreen(),
                                 transition: Transition.leftToRight,
-                                duration: const Duration(seconds: 1),
                               ),
                             ),
                           ],

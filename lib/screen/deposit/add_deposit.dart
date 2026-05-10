@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:my_deposit/screen/deposit/deposit_main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AddDeposit extends StatefulWidget {
@@ -25,7 +26,7 @@ class _AddDepositState extends State<AddDeposit> {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            Get.back();
+            Get.to(() => DepositMain(), transition: Transition.upToDown);
           },
           icon: Icon(Iconsax.back_square, color: Colors.white, size: 35),
         ),
@@ -49,7 +50,7 @@ class _AddDepositState extends State<AddDeposit> {
           Align(
             alignment: Alignment.topLeft,
             child: Text(
-              "\n   Add Your Amount ⤵ ",
+              "\n   Add Your Amount",
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
@@ -66,8 +67,8 @@ class _AddDepositState extends State<AddDeposit> {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.35,
-                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.36,
+                width: MediaQuery.of(context).size.width * 0.98,
                 margin: EdgeInsets.all(10),
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
@@ -113,9 +114,7 @@ class _AddDepositState extends State<AddDeposit> {
                       onTap: () async {
                         double? enteredAmount = double.tryParse(amount.text);
 
-                        if (amount.text.isEmpty ||
-                            enteredAmount == null ||
-                            enteredAmount <= 0) {
+                        if (amount.text.isEmpty || enteredAmount == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Center(
@@ -144,12 +143,7 @@ class _AddDepositState extends State<AddDeposit> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
-                                backgroundColor: const Color.fromARGB(
-                                  255,
-                                  47,
-                                  1,
-                                  1,
-                                ),
+                                backgroundColor: Colors.blueGrey,
                                 title: Text(
                                   "Enter Full Name".toUpperCase(),
                                   style: TextStyle(
@@ -337,7 +331,7 @@ class _AddDepositState extends State<AddDeposit> {
           Align(
             alignment: Alignment.topLeft,
             child: Text(
-              "\n   Your latest deposits ⤵ ",
+              "\n   Your latest deposits",
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
@@ -369,14 +363,11 @@ class _AddDepositState extends State<AddDeposit> {
                     final item = deposits[index];
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: const Color.fromARGB(
-                          52,
-                          234,
-                          230,
-                          230,
-                        ),
-                        radius: 30,
-                        child: Icon(
+                        backgroundColor: item['amount'] > 0
+                            ? const Color.fromARGB(52, 8, 163, 23)
+                            : const Color.fromARGB(52, 235, 4, 4),
+                        radius: 25,
+                        child: const Icon(
                           Iconsax.dollar_circle_copy,
                           color: Colors.white,
                           size: 35,

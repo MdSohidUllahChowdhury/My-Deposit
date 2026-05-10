@@ -145,7 +145,6 @@ class _SingUpScreenState extends State<SingUpScreen> {
                               bottomName: "LOGIN",
                               onTap: () => Get.to(
                                 transition: Transition.rightToLeft,
-                                duration: const Duration(seconds: 1),
                                 () => const LoginScreen(),
                               ),
                             ),

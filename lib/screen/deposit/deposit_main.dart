@@ -4,8 +4,10 @@ import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:my_deposit/screen/deposit/add_deposit.dart';
-import 'package:my_deposit/utils/custom/widget/auth/glass_card.dart';
+import 'package:my_deposit/screen/profile/profile.dart';
 import 'package:my_deposit/utils/custom/widget/deposit/dev_info.dart';
+import 'package:my_deposit/utils/custom/widget/deposit/exit.dart';
+import 'package:my_deposit/utils/custom/widget/deposit/quick_action_btn.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../utils/custom/widget/deposit/logout.dart';
 
@@ -43,33 +45,52 @@ class _DepositMainState extends State<DepositMain> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 80),
+              const SizedBox(height: 30),
 
               // User Info
               ListTile(
-                leading: const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('lib/asset/ShaMaNa.jpeg'),
-                ),
-                title: Text(
-                  "${Supabase.instance.client.auth.currentUser?.email}",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: GoogleFonts.padauk().fontFamily,
+                leading: InkWell(
+                  onTap: () {
+                    Get.to(
+                      () => ProfileScreen(),
+                      transition: Transition.upToDown,
+                    );
+                  },
+                  child: const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage('lib/asset/ShaMaNa.jpeg'),
                   ),
                 ),
-                subtitle: const Text(
-                  "Every Payment Matter 🪩",
+                title: Text(
+                  "${Supabase.instance.client.auth.currentUser?.email}"
+                      .toUpperCase(),
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: GoogleFonts.saira().fontFamily,
+                  ),
+                ),
+                subtitle: Text(
+                  "Every Payment Matter 🪩",
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.notoColorEmoji().fontFamily,
+                    color: Colors.grey,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.exit_to_app_outlined,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => showExitDialog(context),
+                ),
               ),
               const SizedBox(height: 20),
+
               // Total Amount Card
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
@@ -77,7 +98,7 @@ class _DepositMainState extends State<DepositMain> {
                   filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.25,
-                    width: MediaQuery.of(context).size.width * 0.9,
+                    width: MediaQuery.of(context).size.width * 0.95,
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
@@ -124,13 +145,13 @@ class _DepositMainState extends State<DepositMain> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
               // Options Text
               const Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "     Options  ⤵ ",
+                  "     Options ",
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
@@ -138,77 +159,42 @@ class _DepositMainState extends State<DepositMain> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
+
               // Options
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      showDeveloperInfo();
-                    },
-                    child: const GlassCard(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Iconsax.teacher_copy,
-                            size: 35,
-                            color: Colors.white,
-                          ),
-                          SizedBox(height: 5),
-                          Text('Dev Info'),
-                        ],
-                      ),
-                    ),
+                  QuickActionButton(
+                    icon: Iconsax.teacher_copy,
+                    label: 'Dev Info',
+                    onTap: showDeveloperInfo,
                   ),
-                  InkWell(
+                  QuickActionButton(
+                    icon: Iconsax.arrow_down_2_copy,
+                    label: 'Deposit',
                     onTap: () async {
                       await Get.to(
-                        transition: Transition.rightToLeft,
                         () => const AddDeposit(),
+                        transition: Transition.downToUp,
                       );
                       setState(() {});
                     },
-                    child: const GlassCard(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Iconsax.arrow_down_2_copy,
-                            size: 35,
-                            color: Colors.white,
-                          ),
-                          SizedBox(height: 5),
-                          Text('Add'),
-                        ],
-                      ),
-                    ),
                   ),
-                  InkWell(
-                    onTap: () async {
-                      await Logout().logout();
-                    },
-                    child: const GlassCard(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Iconsax.logout_1_copy,
-                            size: 35,
-                            color: Colors.white,
-                          ),
-                          SizedBox(height: 5),
-                          Text('Logout'),
-                        ],
-                      ),
-                    ),
+                  QuickActionButton(
+                    icon: Iconsax.logout_1_copy,
+                    label: 'Logout',
+                    onTap: () => Logout().logout(),
                   ),
                 ],
               ),
               const SizedBox(height: 30),
+
               // Recent Activity Text
               const Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "     Recent Activity  ⤵ ",
+                  "     Recent Activity",
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
@@ -234,16 +220,13 @@ class _DepositMainState extends State<DepositMain> {
                         itemBuilder: (context, index) {
                           final item = deposits[index];
                           return ListTile(
-                            leading: const CircleAvatar(
-                              backgroundColor: Color.fromARGB(
-                                52,
-                                234,
-                                230,
-                                230,
-                              ),
-                              radius: 35,
-                              child: Icon(
-                                Iconsax.money_add_copy,
+                            leading: CircleAvatar(
+                              backgroundColor: item['amount'] > 0
+                                  ? const Color.fromARGB(52, 8, 163, 23)
+                                  : const Color.fromARGB(52, 235, 4, 4),
+                              radius: 25,
+                              child: const Icon(
+                                Iconsax.dollar_circle_copy,
                                 color: Colors.white,
                                 size: 35,
                               ),
