@@ -15,11 +15,17 @@ void main() async {
   ]);
 
   // ── Status bar style ─────────────────────────────────────────
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-  ));
-  await Supabase.initialize(url: SupabaseKey.url, anonKey: SupabaseKey.anonKey);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+    ),
+  );
+  await Supabase.initialize(
+    url: const String.fromEnvironment('SUPABASE_URL'),
+    anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
+  );
+  //await Supabase.initialize(url, anonKey: SupabaseKey.anonKey);
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,

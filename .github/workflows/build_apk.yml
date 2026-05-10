@@ -31,9 +31,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # 5. Build the APK (Standard Release version)
+      # 5. Build the APK with Secrets injected
       - name: Build APK
-        run: flutter build apk --release
+        run: |
+          flutter build apk --release \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
 
       # 6. Upload the APK for download
       - name: Upload APK Artifact

@@ -8,7 +8,8 @@ plugins {
 android {
     namespace = "com.example.my_deposit"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "25.1.8937393"
+    //ndkVersion = "25.1.8937393"
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
