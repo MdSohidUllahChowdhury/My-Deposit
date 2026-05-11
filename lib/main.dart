@@ -6,15 +6,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //final supabase = Supabase.instance.client;
-  
-  // ── Force portrait orientation ───────────────────────────────
+
+  // Force portrait orientation
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // ── Status bar style ─────────────────────────────────────────
+  // Status bar style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -25,13 +24,14 @@ void main() async {
     url: const String.fromEnvironment('SUPABASE_URL'),
     anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
   );
-  //await Supabase.initialize(url, anonKey: SupabaseKey.anonKey);
+  //await Supabase.initialize(url: SupabaseKey.url, anonKey: SupabaseKey.anonKey);
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoginScreen(),
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: Colors.transparent,
+        useMaterial3: true,
       ),
     ),
   );

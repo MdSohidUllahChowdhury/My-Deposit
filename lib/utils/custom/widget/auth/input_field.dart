@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
-// ignore: must_be_immutable, camel_case_types
-class input_field extends StatelessWidget {
-  input_field({
+// ignore: must_be_immutable
+class InputField extends StatelessWidget {
+  InputField({
     super.key,
     required this.hint,
     required this.controllerName,

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ignore: camel_case_types
-class custom_auth_bottom extends StatelessWidget {
+class CustomAuthBottom extends StatelessWidget {
   final String bottomName;
   final void Function()? onTap;
-  const custom_auth_bottom({super.key, this.bottomName = "LOGIN", this.onTap});
+  const CustomAuthBottom({super.key, this.bottomName = "LOGIN", this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,6 @@ class custom_auth_bottom extends StatelessWidget {
       child: Center(
         child: InkWell(
           onTap: () {
-            // Handle login logic here
             onTap?.call();
           },
           child: Text(

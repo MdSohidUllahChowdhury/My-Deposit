@@ -13,12 +13,19 @@ class AddDeposit extends StatefulWidget {
   State<AddDeposit> createState() => _AddDepositState();
 }
 
-final amount = TextEditingController();
-final amountKey = const Key("amount");
-final nameController = TextEditingController();
-final nameKey = const Key("name");
-
 class _AddDepositState extends State<AddDeposit> {
+  final amount = TextEditingController();
+  final amountKey = const Key("amount");
+  final nameController = TextEditingController();
+  final nameKey = const Key("name");
+
+  @override
+  void dispose() {
+    super.dispose();
+    amount.dispose();
+    nameController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

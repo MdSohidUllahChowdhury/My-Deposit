@@ -129,13 +129,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        input_field(
+                        InputField(
                           hint: "Email",
                           controllerName: email,
                           inputKeyboardType: TextInputType.emailAddress,
                         ),
                         const SizedBox(height: 16),
-                        input_field(
+                        InputField(
                           hint: "Password",
                           controllerName: password,
                           passwordVisible: true,
@@ -150,12 +150,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: Colors.white,
                                     ),
                                   )
-                                : custom_auth_bottom(
+                                : CustomAuthBottom(
                                     bottomName: "LOGIN",
                                     onTap: _handleLogin,
                                   ),
                             const SizedBox(width: 16),
-                            custom_auth_bottom(
+                            CustomAuthBottom(
                               bottomName: "SIGN UP",
                               onTap: () => Get.to(
                                 () => const SingUpScreen(),

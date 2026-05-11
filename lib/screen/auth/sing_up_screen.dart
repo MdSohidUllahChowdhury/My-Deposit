@@ -69,9 +69,8 @@ class _SingUpScreenState extends State<SingUpScreen> {
           colorText: Colors.white,
         );
       }
-
-      await Future.delayed(const Duration(seconds: 2));
       Get.offAll(() => const LoginScreen());
+
     } on AuthException catch (e) {
       Get.snackbar(
         "Signup Failed",
@@ -81,7 +80,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
       );
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Opps! error",
         "Something went wrong. Please try again.",
         backgroundColor: Colors.red.withOpacity(0.4),
         colorText: Colors.white,
@@ -132,19 +131,19 @@ class _SingUpScreenState extends State<SingUpScreen> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        input_field(
+                        InputField(
                           hint: "Number",
                           controllerName: phone,
                           inputKeyboardType: TextInputType.phone,
                         ),
                         const SizedBox(height: 16),
-                        input_field(
+                        InputField(
                           hint: "Email",
                           controllerName: email,
                           inputKeyboardType: TextInputType.emailAddress,
                         ),
                         const SizedBox(height: 16),
-                        input_field(
+                        InputField(
                           hint: "Password",
                           controllerName: password,
                           passwordVisible: true,
@@ -153,7 +152,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            custom_auth_bottom(
+                            CustomAuthBottom(
                               bottomName: "LOGIN",
                               onTap: () => Get.to(
                                 transition: Transition.rightToLeft,
@@ -167,7 +166,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                                       color: Colors.white,
                                     ),
                                   )
-                                : custom_auth_bottom(
+                                : CustomAuthBottom(
                                     bottomName: "Confirm",
                                     onTap: _handleSignUp,
                                   ),
