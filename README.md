@@ -6,6 +6,7 @@ A real-time financial transparency application built with Flutter and Supabase.
 <p align="center">
   <img src="lib/asset/collage.png" alt="App Screens" width="" hight="300">
 </p>
+
 ##
 
 ## Overview
